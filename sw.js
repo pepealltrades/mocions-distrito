@@ -1,4 +1,4 @@
-const CACHE="mocions-11ae8cac";
+const CACHE="mocions-310cbd23";
 self.addEventListener("install",function(e){
   e.waitUntil(caches.open(CACHE).then(function(c){
     return c.addAll(["./","./index.html","./manifest.json","./icon-192.png","./icon-512.png"]);

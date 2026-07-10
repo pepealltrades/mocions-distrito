@@ -894,20 +894,30 @@ function handleFile(f){
   const url=URL.createObjectURL(f);
   const img=new Image();
   img.onload=function(){
+    // Reencodem SEMPRE a JPEG pla sobre fons blanc via canvas:
+    // - un PNG amb transparència sortia NEGRE al PDF (jsPDF no compon l'alfa)
+    // - normalitza l'orientació EXIF de les fotos de càmera
+    // - redueix el pes del .docx i del PDF
+    const MAXDIM=1600;
+    let w=img.naturalWidth, h=img.naturalHeight;
+    const esc=Math.min(1, MAXDIM/Math.max(w,h));
+    w=Math.max(1,Math.round(w*esc)); h=Math.max(1,Math.round(h*esc));
+    const cv=document.createElement("canvas"); cv.width=w; cv.height=h;
+    const ctx=cv.getContext("2d");
+    ctx.fillStyle="#ffffff"; ctx.fillRect(0,0,w,h);
+    ctx.drawImage(img,0,0,w,h);
+    const dataUrl=cv.toDataURL("image/jpeg",0.87);
+    const b64=dataUrl.split(",")[1];
+    const bin=atob(b64); const bytes=new Uint8Array(bin.length);
+    for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
     // Mida normalitzada: totes les fotos amb la mateixa alçada (~8 cm),
     // vertical o horitzontal; l'ample es limita a 15 cm si cal.
     const EMU_PX=9525, TARGET_H=2880000, MAXW=5400000;
-    let cx=Math.round(img.naturalWidth*EMU_PX);
-    let cy=Math.round(img.naturalHeight*EMU_PX);
+    let cx=Math.round(w*EMU_PX), cy=Math.round(h*EMU_PX);
     cx=Math.round(cx*TARGET_H/cy); cy=TARGET_H;
     if(cx>MAXW){ cy=Math.round(cy*MAXW/cx); cx=MAXW; }
-    const ratio=img.naturalWidth/img.naturalHeight;
-    const reader=new FileReader();
-    reader.onload=function(){
-      const bytes=new Uint8Array(reader.result);
-      currentImage={ bytes, b64:u8b64(bytes), ext, cx, cy, ratio };
-      prev.innerHTML='<img src="'+url+'">'; updatePreview(); };
-    reader.readAsArrayBuffer(f);
+    currentImage={ bytes, b64, ext:"jpeg", cx, cy, ratio:w/h };
+    prev.innerHTML='<img src="'+dataUrl+'">'; updatePreview();
   };
   img.onerror=function(){ warn.textContent="No s'ha pogut llegir la imatge."; };
   img.src=url;

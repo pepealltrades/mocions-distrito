@@ -2,47 +2,67 @@
 <html lang="ca">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#c8102e">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#E30613">
 <link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Districte">
 <title>Generador de mocions de districte — PSIB-PSOE</title>
 <style>
-  :root{ --rojo:#c8102e; --tinta:#1a1a1a; --gris:#f4f4f5; --linia:#dcdce0; }
+  /* Imatge corporativa · Grup Municipal Socialista · Ajuntament de Palma.
+     Registre INSTITUCIONAL: només colors de marca, cantons rectes, Figtree.
+     Mestre: comun/wiki/referencias/imagen-corporativa/ (tokens.css).
+     Figtree es baixa de Google Fonts quan hi ha connexió; sense connexió cau
+     al tipus del sistema, que és el previst al manual. */
+  @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700;800&display=swap');
+  :root{ --rojo:#E30613; --tinta:#151515; --gris:#ECECEC; --gris-text:#909090;
+         --linia:#DADADA; --blanc:#fff; --aviso:#F3CC1B;
+         --font-ui:'Figtree',system-ui,-apple-system,Segoe UI,Arial,sans-serif;
+         --barra:5px; }
   *{ box-sizing:border-box; }
-  body{ font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--tinta);
-        margin:0; background:#fafafa; }
-  header{ background:var(--rojo); color:#fff; padding:16px 22px; }
-  header h1{ font-size:18px; margin:0; font-weight:600; }
-  header p{ margin:4px 0 0; font-size:12px; opacity:.9; }
+  body{ font-family:var(--font-ui); color:var(--tinta); margin:0; background:var(--blanc); }
+  header{ background:var(--blanc); padding:16px 22px 0; border-bottom:var(--barra) solid var(--rojo);
+          display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  header .logo{ height:44px; width:auto; display:block; }
+  header .tit{ flex:1 1 260px; padding-bottom:14px; }
+  header h1{ font-size:20px; margin:0; font-weight:800; letter-spacing:-.01em; }
+  header p{ margin:3px 0 0; font-size:12px; color:var(--gris-text); font-weight:600; }
   .wrap{ max-width:1000px; margin:0 auto; padding:22px; display:grid;
          grid-template-columns:1fr 1fr; gap:22px; }
   @media(max-width:820px){ .wrap{ grid-template-columns:1fr; } }
-  .card{ background:#fff; border:1px solid var(--linia); border-radius:10px; padding:18px; }
-  label{ display:block; font-size:13px; font-weight:600; margin:12px 0 4px; }
+  .card{ background:var(--blanc); border:1px solid var(--linia); border-radius:0; padding:18px; }
+  label{ display:block; font-size:12px; font-weight:600; margin:12px 0 4px;
+         text-transform:uppercase; letter-spacing:.08em; }
   input,select,textarea{ width:100%; padding:9px 10px; font-size:14px; border:1px solid var(--linia);
-        border-radius:7px; font-family:inherit; background:#fff; }
+        border-radius:0; font-family:inherit; background:var(--blanc); color:var(--tinta); }
+  input:focus,select:focus,textarea:focus{ outline:2px solid var(--rojo); outline-offset:-2px; border-color:var(--rojo); }
   textarea{ min-height:70px; resize:vertical; }
   .row{ display:flex; gap:10px; } .row>div{ flex:1; }
-  .hint{ font-size:12px; color:#666; margin-top:4px; }
-  details{ margin-top:14px; } summary{ cursor:pointer; font-size:13px; color:var(--rojo); font-weight:600; }
+  .hint{ font-size:12px; color:var(--gris-text); margin-top:4px; font-weight:400;
+         text-transform:none; letter-spacing:0; }
+  details{ margin-top:14px; } summary{ cursor:pointer; font-size:13px; color:var(--rojo); font-weight:700; }
   .btns{ margin-top:18px; display:flex; gap:10px; flex-wrap:wrap; }
   button{ background:var(--rojo); color:#fff; border:0; padding:11px 16px; font-size:14px;
-          border-radius:7px; cursor:pointer; font-weight:600; }
-  button.sec{ background:#fff; color:var(--tinta); border:1px solid var(--linia); }
+          border-radius:0; cursor:pointer; font-weight:700; font-family:inherit; }
+  button.sec{ background:var(--blanc); color:var(--tinta); border:1px solid var(--linia); font-weight:600; }
   button:disabled{ opacity:.5; cursor:not-allowed; }
-  .prev{ font-family:Georgia,serif; font-size:13.5px; line-height:1.5; white-space:pre-wrap;
-         background:var(--gris); border:1px solid var(--linia); border-radius:8px; padding:16px; min-height:280px; }
-  .prev{ font-family:"Times New Roman",Georgia,serif; }
+  /* La vista prèvia imita el document oficial: es manté en Times, no s'hi
+     aplica la tipografia de marca. */
+  .prev{ font-family:"Times New Roman",Georgia,serif; font-size:13.5px; line-height:1.5;
+         white-space:pre-wrap; background:var(--gris); border:1px solid var(--linia);
+         border-radius:0; padding:16px; min-height:280px; }
   .prev .box{ font-weight:bold; text-align:center; border:1px solid #333; padding:8px; margin-bottom:12px; }
   .prev .h{ font-weight:bold; text-align:center; margin:12px 0; }
-  .avis{ background:#fff7e6; border:1px solid #ffd88a; color:#7a5b00; font-size:12px;
-         padding:8px 10px; border-radius:7px; margin-top:12px; }
-  .warn{ color:var(--rojo); font-size:12px; margin-top:6px; min-height:16px; }
-  .drop{ border:2px dashed var(--linia); border-radius:8px; padding:12px; text-align:center;
-         background:#fff; transition:border-color .15s, background .15s; }
-  .drop.over{ border-color:var(--rojo); background:#fff5f6; }
+  .avis{ background:var(--gris); border:0; border-left:var(--barra) solid var(--aviso);
+         color:var(--tinta); font-size:12px; padding:8px 10px; border-radius:0; margin-top:12px; }
+  .warn{ color:var(--rojo); font-size:12px; margin-top:6px; min-height:16px; font-weight:600; }
+  .drop{ border:2px dashed var(--linia); border-radius:0; padding:12px; text-align:center;
+         background:var(--blanc); transition:border-color .15s, background .15s; }
+  .drop.over{ border-color:var(--rojo); background:var(--gris); }
   .drop .hint{ margin-top:6px; }
-  .imgprev{ margin-top:8px; } .imgprev img{ max-width:100%; border-radius:6px; border:1px solid var(--linia); }
+  .imgprev{ margin-top:8px; } .imgprev img{ max-width:100%; border-radius:0; border:1px solid var(--linia); }
   #btncam{ display:none; }
   /* Mòbil / pantalla tàctil */
   @media(pointer:coarse){
@@ -50,13 +70,17 @@
     input,select,textarea{ font-size:16px; }           /* evita el zoom automàtic d'iOS */
     button{ padding:13px 16px; font-size:15px; }
     .btns button{ flex:1 1 100%; }
+    header .logo{ height:36px; }
   }
 </style>
 </head>
 <body>
 <header>
-  <h1>Generador de mocions de districte</h1>
-  <p>Grup Municipal PSIB-PSOE · Ajuntament de Palma · funciona sense connexió</p>
+  <img class="logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnkAAADCCAYAAAA1m9Q+AAAszUlEQVR4nO3debxdRZUv8N/NUBiGCBQ0gykGbQdoEJAWHBsQHBpBnNBGpEFEQcIQEAecQFpEZAoPcGZQGYQPqIyNoIbBByjth7ER5KlAYZCGgrwAyUsByfvj1I03N+fes4eqWnvv8/t+Pvnc5J59aq2cc+856+xdtWoEY1ilAWBNAAuMdxh24fGYYbxbLJ0LERERURkjAGCVXhZxzPsAzANwrPHuyYjjZjHgsTjKeHdKtmSIiIiIKpqSYMzNAcwG8IRVeplVetcEMaSsJZ0AERERUREpirzxrrZK2wxxcpghnQARERFRETmKPACYFc7qvTpTvFRyPV5EREREtUwJiwtyuT9zvNhWkU6AiIiIqAiJM1NduXRLRERE1FhTBFqlzLJKH547KBEREdEwmVbwuM8BeATAIgALADwOYBaARwGsF/7+egBzCo43F8DpxdNsjBekEyAiIiIqomifvLWMdwsGDRbm230MwDkFYr/GePdAgeOyGvBYzDXeHZEtGSIiIqKKCs3JK1LgheNgvDsXwKsKHH5AkTEbZqp0AkRERERFJFl4Ybx7EL1dLybzbyliExEREVHxOXlVfAXAzZPcPqvoQOEy8AcAvA+ABrAtgLXx9zNr8wH8BsBdAK4x3t1ZPt00rNIbADgcwFIAM8PX59Frx/Kg8e70cJwCMB3AQQB2AfCuMMQSAJcD+Jnx7icF4r0FwEcAbAPgDQAWAlgNvTmQjxrvTov2n/t7zH8BsEeI96ZxNz8N4HYA1wH4hfHu3tjxiYiIaGWF5uQZ70aqDB5jXKv0z9ErIMo6AcDxxrvnytxpQM5nGO8OKzneV9ErePsy3o1YpV8G4KcAtisw5HHGu2P6xNkXwHkF07oWwAHGu78WPL4vq/QpAI6scNevADjReOfrxCciIqKJFbpcK9HA2Cr99VBwVSnwAOBoAM9apb8cMa0qVp/sRqv0t9BbpVykwAOAr4TdQ5ZvsWaV/r8oXuABvbOEj1qlzyxxn+Ws0vuG56ZKgQcAxwFYYpU+pOL9iYiIaIBkzZCt0hvVuO+P0CvSYjjOKv3rSGNVMWi/209VHHeRVfo9odiaWXGM2WWLYKv0+ShXUE7mDKv0DZHGIiIiojGKrq6tMva+Ve5kld4NwD5V7juJnQTPGi1NOPblEcY4ziq9WZEDrdKfB7B3hJhj7RDGJSIiooiSnMkLlxKPG3DYpf2+aby7CsAvoyfVO2ukEow7yBKBmGXdV+Qg49030FvcEtsJQs8NERFRZxWdk1d4FW54s15U4NALJ7rBePd2AHcUGOPFonkFp5Y8PobpFe7zpwhxnyhzsFV654KHbo3eStmJLETv+S/yMzDWCSWPJyIiokkUPZO37uhfJlqEYZXe2ip9GgqeuTLe/WzA7a8D8Ltx3z4BwOrGu5HwZ1pYoTsC4KgCYWcXyU3IuwHMDP+vfwz/r/1KjnE5AB3G+IcwxuoAri5w3y8WCRAaXr8TwG3jbjoRwIjx7qXGu9XCn5GQw+cKDF11EQcRERH1UXRbs9gKbw9mlb4YwIcATDXeTTq/zSq9NQacARzUtiVBC5XvY/DuHltO1D8utFd5tECo84x3H5skj18D2GmyAcq2yrFKnwtgb+PdwEutVunXY+WivVZ8IiIimliy1bUDfKHogca7D4czQgMXMIQmyJM1YIZV+uVFY2dywWQNgkMvu7MKjHPggNt3HzRAmcvyAGC8+1iRAi8cezsGzOezSr+yTHwiIiKamESRt6XxbnHC8X8/4PZNE8au4vgCx1ww4PbfD2osHJpCDzojuE2BXOq4e8DthVb5EhER0WC5i7yjM2xrNajIez5x/FLxjHd/GDSA8e7WAYcUXfHad0XzGJsUHKeqyRZsAL2t3oiIiCiCnEXeK0ILjiis0jOs0muEv08LX9cAsN6Auy6MlUNBL2SIUXTrtkGXvGtvbTJ+YY5Vekr4OiPG+ERERFRMqTlYFZ0D4LCye8iOskqvBuAg9Prurdrn9hW+FpDyUrGUomfAnq15+wrCc3MSegtLpo/5/vjjig650vNLRERE1aQq8hyAOca786sOYJXeAIAFMDVaVj1r1rhvjqK4iqKXoAc9loXa31ilNwHwl4Ixy8h9KZ2IiKizihYtn0Nv3tfo5b5Vwp/nw/dmAHgKwF3GuyfrJmWVfieAa+uOM4E6l6irNDZuUmE4qHn0wBXMYXu4M+KksxIWeURERJEULUDmDlq9GUs4g5eqwAPS7iXbaVbpjZCuwAOKzy0kIiKiAQqd1cpV4AXzE49fZyHEsJ9pelg6ASIiIiqm0Jk8q/Q0413yVaLhMu0glwO4Br39XRehV7Stht7l41UBnIJ0vfAKzVnrIqv0wQUOuxbAlQAeQe+xGv0zHb1L+icB2GqS+8+omSYREREFRS/X5mgDAgBzBty+vvHu8ckOsErvism3EaszJy/X49BE+w64fUPj3WOTHWCVvgyTF3lEREQUSdHLtanzGPUvk9w2d1CBF8wccHudhRDD3Kx3u0luO2tQgRcMem5KtXAhIiKiiUntXTuRyfqkXVNwjFkxEpnAMBd5k/lVweO2H3B77HY5REREQ6tpRd5kBu1kMbrzxZsGHFalDcqo1Wrct8sGFr9W6XUAvHXAYWtGyYaIiIhaVeSdU+CYPybOYe/RLdRoBRdNdqNVWqHYytw6BTgRERGNUXR1ba55eSei13i5n+lW6WUA9kBvFedS9M78PIXeQovv5kgQwPNW6R+gVyA/B+Bp490xmWJLuhLA7hPdGJ6bd6N3WX2K8W5pKO72RrECHeCcPCIiomiKnpWahjwrS28pcMzliXM4GsAJA45ZYfWuVfqYjItTpFyGSYq84OrRv5TYr3asYe9DSEREFE3R1bVZWocY767IEWeA08veYQgKPBjvfpghDC/XEhERRdLEOXk7JB5/0rNFxrvFSLt1V5tN1kaFiIiIGqRxRZ7x7iYA+wvncBiA30nm0ETGu9sBHJgwBC/XEhERRdK4Ig8AjHfnAji0wl3nYvLdLgCg0D68xrvtAZxcIYfxFkQYY5Ci260Nuuy+YNAAxrvvYfBj3M+xAPYZcMziCuMSERFRH40s8gDAeHcmgBEAXyxw+HUANjXeHQFgHoD7ATwBYCFWPjtU+GyR8e4z6M0TOwHVV34urHi/MhYUPO7FAbfPLzKI8e5s490IeoXbINcBmGW8+yqA69Hbc/gJ9J6H8cVpjseKiIhoKIyM/4ZVekaYl9Y4Vukd0dvRYiF67UvuN979VTSpEqzSU4x3SyOPWWrhx9jjrdKrGe+ei5TH1gA2Re+Dw2IAvy+yDV2Kx4SIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIgaZUQ6AcrHKr0JgHcBeDuALQDMArBqiSGeBvAggMcA3AjgduPdbyKn2VlW6ZcB2AHAtgB2Ru/x1yWG+AuAOwD8GcB16D3+CyKnSUREHbFCkWeVXgPAqsa7x63SMN4JpQVYpQFgSvjnUgCi+bSRVXpXALsB2B/AKonD3QfgJwAuN97dnThWK1ilX4ve478vgFclDHUfgLMAXGW8eyRhnKSs0lPQ+51/YZh/18NrHwCsAWA6er+7C4x3i8WSajGr9LYAXgSw+phvzwhfnwfwQvgK9B7vse8708bcp99x419XnwewAL3n66H62TeHVXptAK8GsDGA9QDMRO9xnALgOQDz0TsBMB/AnV39HbZKrwlgewDrA9gIvcdiBno/LwsBLAZwF4CHANxnvHtOJNFgBACs0sskk4joPgC/A3A3gMva/IZXlVV6awBfBPBB4VTOAfAN492DwnlkZZWeAeAIAMcLpnGG8e4wwfildeg1KLVnjXdrSCfRFlbplwP4k0Rs411rr5RZpd8IYBcAHwHwmhpD3QHgDAAXGO98jNxyCh+4dgPwSQC71xjqFgDfQ+8kyIL6mRXXtSJvIgsBnIDem59oVZ2KVfpg9M7mNNFexrufSCeRUnhRvBrAWtK5jLO58e4P0kkMMgSvQdG0uXjIzSp9FYB3C4Q+x3j3cYG4lVmlPw7gB4nDXA3g88a7exPHqcwqvRGAKwBslTDMLwEcnOMkyLAUeeOdarz7tHQSMViljwBwqnQeBR1ovPuedBIxhReEe9C7dNFUzwL4R+Pd49KJTGQIX4MqY5FXnODP1Szj3V+FYpdilb4QwF4CoRv1fmCVPgbAsQKhP2i8uyzV4MNa5I1aAmC/Np5lskp/AMCl0nlUtLfx7kLpJOqySv8PgHWl8yjhjwC2buLcriF+DSqNRV4xVulXovczn13TnyOr9DoA7ke5hV+pzDXeHSEV3Cp9MYAPScUf4yzj3SGxB50y+JBOWwXARVbpZVbpg6STKcoq/Ve0t8ADgAvC/6GVrNKHhKKkTQUe0Fv8scgq/QXpRIgyOEYo7pVCcQuxSl8G4Ak0o8ADgDnhPfjwnEGt0meH1/EmFHgAMDs8DmfGHHTYz+T1s5Px7gbpJPqxSu8IYJ50HpHNMd6dLp1EUVbpO5F2rkY2TTrbwNeg4pr0vDUZL9WuyCr9MfQWxDXdlinn7Fml3wfgp6nGj2gnADcZ75bWGWTYz+T1M88q/b+lkxjPKn0uulfgAcBcq/RvpZMYxCq9RXjT6ESBB/TeBK3Sm0nnQRSbVXoDqdgNLfD+H9pR4AHAPVbpU1IMbJW+G+0o8IDe+/0v6g7CM3mTW6UJy76t0g+h15uo05p6hsIq/RYAN0vnkdA+xrvzJRPga1BxTf09aRKr9BWo1/KiqiuNd+8RiNuXVXpn9FZytpEz3q0TY6DQ46/NjftWrTqXmmfyJrfEKr29ZALhza/zBR6w/MzSa6XzGMsq/Wl0u8ADgB9bpT8rnQRRRBIFHgD8u1DclVilf4T2FngAoMN7Qq1BrNL/hnYXeEBvLvVbqtyRRd5gt1mlP5k7qFV6vSE9u3FX6NckyiqtrNJfA3CydC6ZnBhaCBC1Wtg+UERTthkM7x37SOcRybLQ5L80q/Q3AFwUNx0xN1e5jM0ir5jvVv0hq+FvmeM1yQ+s0rsJ53AkejuHDJNjQ99FojY7UijuLUJxV9DRkwN3WKXfXuYOoSD6XKJ8pBxZdvUti7zi7rBKb5EjkFX6+hxxGu5Kq/RHJQKHS8YnSMRugFOlpygQ1SRV5EnFXa6jBd6o64q+B4dL1eLPRyKzyxR6LPLKuSd1AKv0vujtGUi9uWI7CsS9SyBmk9wmnQBRFaHJrwjjnViXAKt01wu8UfcMeo5DH9CuXKqeyGyr9JeLHMgir6QMv0jnJR6/beZZpV+dK9iQvFAOxMeBWupEobg/Foo7qpN7sk/giYluCPO5j8+Yi6TjrNIDV3KzyKvAKv39ROPyjbW/++uusCrCKn1S8iAtEnozErXJ/kJxjxaKO/p7uqpUfAn93iut0msC+EH+bERdPugAFnnVHBB7wNCqgya2zCqtUg0e5noclWr8ltov5WNOFNMwNkAOffD2k4gtzSp967hvPS2SiLBBJ4dY5FUUtreKaVhaddSxJOHYyedbtlTKx5woJqmJ9pcIxQXa3QevrjdYpT9glZ5hlX5BOhlJYaFJXyzyqtsqVj8mXhYrLmzPE3vMQhNYhxX751FLSJ2J/5JEUKv0ryXiNsylAP4bwFTpRITtM9HcdRZ59TwcaZz9Io0zDFZJMOZxCcbskmOlEyCaTK72Vv0Y7x7MHdMqvQl6G9gTsKl0Ag1xf79vssirp/anh9CRm4pZEnvfTqv0TTHH6yqr9A3SORBN4mChuFLTbP4iFJcarN/2lCzyaqqyzcg4XevInco9xruXJBj3rQnG7KIdwibfRE30KaG42dt1WKV3zR2TWmOlFkIs8uqrPNm36obDQ+gi491rYw9qlf6v2GN23H9KJ0A0nlX69VKxhfaqvVogJrXE+DnmLPIiqPEic37URLrpKOPdR2IPapVeA8C2scftuO2s0nzNoKY5SCjuObkD8iweFbDCHHO+YMdxdtk7WKWnAdg4QS5VOQDzAFyJ3rL8R2XTAQDsY7yrezl8IvMSjdt1F0knQDSOVAPkLwjEPE8gJrWMVfrto3+fJplIh2xZ4T77Rs+ivEUA9jTeXTP+hrDDxDQAGsCeAM7Imxrearz7TcLxm3YWbz6AX4WvLwBYF8BmaN6cwQ8B+LB0EkSAeAPkx3PGC3Ni180Zk1rrPxHqO+kib6bx7pmyd7JK7wbgywC2i59SNVbptY13T5W4S/RdM0p6d7/ibpTxDugVG48DOBPAmWHZ/s0AZiXObVXj3eJUg1ul90w1dgW7G++umuyAcIn01wB2yJPS5KzSuw3KmZJ5UTqBhrlYKK7EGW3286Sipo7WJCOA3J6pMdphWKV/i2YUe/sY7wrPsRPep/aDxrvLqtzRKr0agL0BfDduSj2xW6T005A9gq813v1rmTuEZpd9eyHllqCVjdRzcjx6bTBeBPAMgHXQa420BHIF1VQAC9E7a7MQvd6QS1J+8GkrwZ+b9QXO5DXhdYva41Tj3adbX+QBy1eTSDe0vdx4996iBwv+wp5hvDus7iBW6ZcD+FOEfJbLUeABjXixvNR4V+lsYriMLp1/l4q8XYx3vxKKTTWkeA0qKtdr1aiwhzS3GKRSjHcjnVh4Ybz7D8hPCC+86skqvV7KRAaYE2MQ492fAUyPMRaAhzMWeOLNp6sWeOG+ALBVvGyqsUq/TzqHSCR/F6merwnFvVYg5rsFYlIHdKLIA4AUbTZKKlPwbJ8si8ldZ7xbGmsw490LqL/rx0XGu00ipFOUaPPpGMWs8e5uAD+NkE4d0vFjifb7QNntJRRXYj51ExbqUctYpXfuTJEXvEkyuFV6nYKHSq3sjL4Fj/FuaY3C5cQGFOc5/S7WQMa7D8Qaa8g9L50AlVfitTY6491fBcLuIRCT2u99nSryjHe3CqdQdAHIa5JmMbF7Uw1codCbbbz7fJJkJmCV/mjOeH3EPoN7QuTxSmnA40nD6yyhuBKXaomq2rVTRV5ws2DsVxc8TqrXUerVYK8oeNwHjXffSppJf8cKxBy1JMyni8Z4J9GMdayjhePHwDN57fQhobhSe+QSVbFpF4u8ywVjb17wOKlLDaukHDwsxhh0WWHdqu1bIihahKawi2DsVIr+vDdZ0t8Jis8qvaZUbOPdQ7ljSl6apvbrYpH3e8HYRc/QrZ40i4kVPdNYmfHuCkywuMF4N2K8ezJ1Dv1YpV8pEXeMVLt3HJlo3ELC9nxEOZ0pFFdqK8QufJgiIV0s8lJuhTXIRgWPk3rcs7xYGO++CeDScd/L2leqD8nVaX+Lfal2lPHutCQDF8cJ4ZTb3kJxZwvFfb1QXOqAzhV5oa2HlE0KHifV1PLwXIFCL7jnw9+lCzwAOEowduGdUFrok9IJ1CT5ekElCV+q/YNQ6I2F4lIHdK7IE7ZWweNK79cbSdbt34x3qiEFHiA79yp1T7lLEo8/mXcIxo6BCy/a5SShuJcOPiSZoleIiFbCIk/GE1KBrdKnSMWWYpUW/TnP0Nrnm4nHJ2oKiUbEAPAlobgAMFMwNrUcizwZjwjGPtIq/TLB+BJ2lk4gJeOd5GIjWKW3kIxPw8EqLXZGy3j3gFRs8Gwz1cAiT8bDwvEfFY6fm+QlxdsEY+fSlX1sqdk+LhRXalXtqGeF41OLsciL6+mCx/05aRYFWKWXSeeQkeSZvBsFY+fS5jOlUu2MqLyvCMU9TCjuqKeE41OLsciLq+iq2buSZlGQVXrZkFy63UYw9u2Z4tyXKU4/ko9vXWl621BUVumXS8U23iXbDrIgybZg1HIs8uJaXOQgwaX4/Txqlb5QOokOuztTHMnLwm2eGL5UOgEqpG+D9QzOE4o71nXSCVBrLRIt8qRXPSbQ1tPqe4WzertKJxKbZF+t4MFMcSQnhrfZBtIJUCFS/Ri/LhR3OePdY9I5UGvd2bUiC1bp1QTDl1lQ0cQJ+VdbpR+wSq8nnUhEW0sGT7XTRR9/yhWoH6v0GpLxaxBrZ0TFWKXFCnHjXa4PaUQpXNu5Ig+yW8CUuTR3QbIs6nkVgL9ZpW9q8Rv3WFkbQAuSnJMHAFsJx6/qOekEaKBsO/WM06TX6FukE6BWuqSLm4vvLxi7TJH3QwBnpEokgrcCWGiVBoCNjXeSvf3q2FY6gUweEo7/arRzgviXrdKXozc3bwmA1dBbcbsg3L4UvbnLVb4qANPDWGsCWAhgifGuy9vcpSA1H+/TQnH7ORnpd86hjjHePSBa5BnvUkx63ifBmEUVPrVvvHsmFFBt8HDIdSfj3Q3CuZS1iWDsbHsUG+8WC/88bSoZvIZ3IHMfRav0Ksa7s3PGbCurtNh7lPHucanY4xnvftai9wtqhvlAx1bXWqXXloxfYan9nBR5JDQvLND4X9KJlCB5GfF+wdi5bS2dQItI7qPcNhcLxf22UNzJLJJOgFrlDEC4yEsw5+ucyOMlZbw7XTqHig4Nxd73W/DpUvINdaFg7NzWl06gRVjkFfd+obhN3A9aqhk0tdMPAfkzec9EHm+PyOOVUXVngyausi3qAADLrNJXWKXXkU6mgXKv3JRs7DsMTbVjYW++AiQbtRvvHpKKPRHj3SnSOVB7jLbekS7yos23aMA2XVVXP+0QNQsZuwN4wir9c+lEGubJzPHmZ443Fs/kUWxfE4rb5ObDbPlDRSxfgCpd5K0ZYxCrdBMawf6kyp2Mdx7AHZFzkbJHuIx7vlVaSSfTAEX3Mo6lMRPFaVLPSyfQEvsJxZ0jFLeI/aQToOYz3p07+nfpIm9BnTtbpXcMZ/BeFSed6ox3lbevMt69LmYuDbA3gCVW6Y9J7moi3BgbqPnzXQE/5VMnSP7uNmzbyRUY766RzoEab4UrOtJF3upl72CV3tYqfVoo7uYlyEnK0dIJJHAOgBet0jsKxZfeuSP3wovYc1yJpMwVinulUNwyTpZOgBptl7H/kG6G/HQLVmcWcWSEMU4GcEKEcZponlX6LuPd1pnjzswcb7zFmeOJXga0Sk8z3r0gmUNLTJdOoAUOEIor2Uy/EOPdZ6zSR0nnQY21wplo6TN5XXFa3QHCm+NIhFyaaqswX+/gjDGlP0HkLvIWZI433kbC8duCr7uTEL5Um3uxVFXD1J6Jittu/H7pfLGJINYm9GGcrq9SPMsq/V+ZYkn3I3ux4/HG4xkqimGuUNy7hOJW0da9oikh493t47/HIq++18QcLGyl86aYYzbQtuGs3lsSx5Eu8nL3Q5O+VCr9eFM3SF2qPUwobmmhjx8XWtFYe/X7Jou8mox30du3GO9uRQvmhkRws1X66wnHH7aiQ7o1B8/kUS2Sc7SNdzeJBa+mrftFUwLGu75t3Fjk1fODVAOHPjdbphq/QY62St+aaGzpIi/3mTzpnRSkF3JR+0nt6nC1UNzKjHfPSedAjbH7RDewyKvnEykHN97dC2CblDEa4g1W6RSXGqWLPCIqJ0angio+LxS3Lp7NIxjvrproNhZ51R0Va8HFZIx3dxrvurzqdtTUBFvTSf98544v/f8lqswqvYFU7PCBunXC3LyqW2pSN0w6h59vChXl3iw6FHpd2f5sQpELPf58E7XHbKG4NwvFjcJ492bpHEjMw2EO/4T4JljNdhJBw/ZnUivPsolY6EnPWRmqZshUGJ+n/r4oFPdzQnFjOlY6AcrPeLfJoGNY5JV3Y79eNLkY784ehsu3VunrIwwj3Tcu9+/X1MzxxpNu4dIW0s9T41ilN5GKPehMSBsY774qnQNl95UiB7HIK8l4t6N0DsDyy7d9++J0xC5W6S/UHGNJlEyqy91SRPr3+Vnh+NRehwvFTdYhQcCG0glQPsa7/yhynPSbQqs07Qya8e4nIad50rkkcrxV+pU17p/7cul4MzLHk15NLP14t4X0GeYmmiMUt9AbZRsY7x4D8HvpPCiLVxU9kEVecatKJzAR493bAGyMbs71+aNVumr/NemiI3eRlzveeIuE41MLWaU3k4ptvHtEKnYKxrt/ls6Bkvul8e7BogezyCvmXcY76YJhUsa7R4x3Ct1cmHFqxftJFx25i67VM8cbr9G/Iw3COXkr+pRQ3EuF4qYmsjCQ8jDevb3M8SzyBlvXePcL6SSKGrMwQ+qFM4VDK95PuujIfflU+kye9GrmtpC+rN40VX+/6zpQKG5SYWHgX6TzoCRKf5BnkTe5dY13T0onUYXx7juh2OvEmT2r9MUV7jZsRZ7o3rE5moN3BBeoBFbp9aRiG++ekoqdwTBsiTlsTqiylR33muzvNuPdG6WTiMF4dzaAs63S7wRwrXQ+NXzIKr1/mR9y490DkhueA5iVOd66meN1gQNwO3qX9peGP3WL8yn4+wfopeHvCwHMBPAYgB/XHL9LfiQU9yyhuFmE18mRBLsIkYxnjXeVuk2wyFvZPsa786WTiC1cch6xSr8dwHXS+VR0EoCDpZMoYc3M8VbLHK8L3mm844pEOe8Qilt1nm/bvBvA1dJJUD3GuzWq3peXa//uPOPdSBcLvLGMd9eHy7gbArhcOp+S2jbPcP3M8SQXXjwtGLuOl0knMKys0utIxTbe/Vkqdk7Gu2sAXCCdB9VSa8U0izzgLgDrG+8+Jp1ITsa7x4x370Vvpd/3hNMpTHIOTwW5c107c7yx2vqmuZZ0AkPsWKG4twjFFWG8+6h0DlTZoXWvNAxzkXdROHO3tfHucelkpBjvlhrvDgxn946TzqeAL0snUMJGmeNtnDneWPcLxq5DeleUYTZbKO7eQnElNaqRPxVyqfHuzLqDDFuRNw/AdqG4+4h0Mk1jvDsGvUnnR0nnMomybwySlxGl+9blVLg5Z8N0sYF441mlc38AWs5495BUbClh5Ttb97THfOPdnjEGGoYi7ywArwiF3dtCDyGagPHOG+9OCWf27pDOpx+rdJl+cPcmS4TGekg6gYoWSCcwpE4Titu2ecjRGO882FqlFYx30eYKd6XIcwB+id6Kqb0AbApgJBR2hwzLJNvYjHevQ81Jn4nsU+LYh1Il0SQlC98UHhWOX9Wa0gkMqfcLxd1fKG4jGO/uRUd6p3ZY1Evr0i1UtgTwsPHumbHftErDeLf8K8kJkz5HrNI/B7CHcDqjPoDii0VuQ7misK02F45/o3D8qni5NjPJ3pUdb4BciPHubKv0FgDmSOdCK9kwds0jfSbv3vEFHvD3zvks8JojrMSV2n5ovDeUOFb08rxV+uWZQm2SKU5fxrsXJONTq5wiFJf9EAPj3REYslXGLfB+491jsQeVLvKkLzFRCWGlz+7SeaC3c0BR0nMwt+lYnK5hcZrfkUJxpVbzNpLx7s1o76r4rjnUePezFANLF3lc7dMyxrur0KKmxA04G/zKTHFenylOP/MFY9cl/Ro4VKzSYruyGO9+KxW7qYx3m6G9jcy74owYrVImIv0Cx/kwLWS8+w6EPwGWbIr8RLJEBst1hu0tmeL08xvB2NQuUtuJXSoUt/GMd5JN1IfdRca7w1IGkC7ypgvHp+qkl+KXmesmOffkXzLFWTVTnH7auhcywNeg3D4pFDfpG2kHsFlyftfl6NcrXeTxTF5LhYn2NwumsGGJYyXzzL1/rQRO4KaBrNJi3RxSTGjvEuMdQm9UyuMvxrt35ggkXeQtFY7falbp863SuwqmcIRg7DKXa29KlkUBVuk1Eo8vernFePcHyfjUGlKr8+8Rits6LPSyWGK8y9V1QbbIM94tlozfZlbpZejtwXi1VCPcuhsn1zSr6IEN2OXkg4nHPyjx+F3Gqwn5SM3H+3ehuK3EQi+pRca7l+QMKH0mjyoIBd5Yi0QSkdWmldmpm0hL7R4AAN8WjB0D5+RlYJXOtcp8Jca7O6Vit9hU6QS6yHiXfXU5i7wWsUpP61Pgjd7W9/sZSPUoKfvmLHnWMXWRt23i8SdzrmDsGMRaegyZfYXiDu1etXUY75aiXR+km+5FqTOkLPJawiq9AQZcWhIq9J4ViAkAL5Y8XupSEYB0e8tapbdOMW4J0pfC62Iz5Dy+KBT3WKG4rWe887x0G8VC453YoiMWeS1gld4eBRvOWqWH5U2r7HzOJN3ESziuZeMW0oBm03UtlE6g66zSG0nF5qXa+ljo1fK08e6lkgmwyGs4q/RBAG4rcZepVun/SZVPH1JzmkrtstCART5HJRpXcpu58wRjx1L2jDCVJ7Uw6KdCcbuIc/TKe6IJjaZZ5DWYVfoYVJvYvq5V+pnY+UygTL+6mB6pcJ8LomdRQux2N1bpLWKOV4HURvMxSTaRHhZHC8X9qlDczjHeLeUZvVLuM979g3QSAIu8xrJK/wj15pOsnnqOnlU65fCDVNmq7OToWZRzdeTxRPt/Ge/ulYwfidhcmWFglV5HKrbx7m6p2F3FQq+Q+413/ySdxCgWeQ1klf5vAPtEGmtZwma8eyYat4hby96hCfNzrNJRtjmzSmfplj6JR4Xjx7JEOoGOk1rwdI5Q3M5joTepW4x3m0knMRaLvIaxSj8HYPPIwy5MdGnvkgRjFtLiCf83Rhrn2kjjVBXlQ0gDDMtCJSlSPyffEIo7FFjo9XWJ8e7N0kmMxyKvQcLl1VRzhO6xSp8UazCr9GdjjVVBnV0KUu8+MVCdy+hWaViln4qZTxXGuxukc4iktZ8Wms4qvaZUbOPdg1KxhwULvRWcaLz7sHQS/bDIa4hMPe6OihEnvHifWD+dyiqfDTPeXRYzkapqPA/PAVgrZi4VdGkv0DdIJ9BhUu19ynQjoBpCofe0dB7CDjXefV46iYmMAHK7JfCTwPIeUg8LhL4FwPuNd4+XuZNV+jQAc5JkVNz+xrvKOy1YpW8C8NaI+dRxlPFu4CpVq/SeELw8Ps6mxruHYg4ouGNLK7XhtVPwOd2yI4uCWsMqfQVk2zlJ2cN4d4V0EpNhkScotNSIveKyrHsAHGK8u2miA8LCjX0BnJEtq8mta7x7suqdrdJro3mX6X4H4Cb0zkI8C2AmgC3Qe+HcRjCvlaT4vWWRV9r6ZT+g5WSVXg/A3yRiD/v7ihSr9MUAPiSdR0a7GO9+JZ3EIGwfIMQqfTiAudJ5ANgSwI2hHcqz6O3xOh+9ImNTxF8EUludAi/c/ynh9i/9bBf+NN2npBMgAMAi6QQGiDb/tyReqhVivPuwVfoRpGv83iS1TjTkxCJPgFX6qwC+Ip1HH6sD2EE6iQHOizTOHDSjyG4V4913pHMgAM1v/SK1qvYTQnEJgPHuM1bpJyA7Zzu1kTZ1d+DCi8zC3IUmFnhtcUyMQYx3p8cYZ8icJZ0ALbdUOoGJWKXFTh5wLp484903AbxLOo8UjHetKvAAFnlZWaX/D4Zzcmo0xrsq25lN5MiIY3We8e4Q6RyoFeYKxe1Kg+7WM979AnJbXqbwdFvnerLIy+tZ6QRabo+YgxnvTos5XscdL50AtcZsobgHCMWlPox3j7W1MBrnHOPd2tJJVMUiLyPj3dbSObRZoqXqUm9IrWK8+5J0DtR8Vmmx95Rw9ogapuWF3lzj3celk6iDRV5+U6UTaKmoZ/FGGe++lWLcjmlKT0Fqvm8LxZ0nFJcKCIXeQuk8StrbeHeEdBJ1scjLzHi3FMA7pPNom8QNJ1NtJdcFznj3G+kkqDU+KRT3QKG4VJDx7qUALpDOo6AtjXcXSicRA4s8Aca768EXpTJ2Sjm48W4xgHNSxmixdaQToHawSq8mFZt71baD8e6jaPh7X1hB25lV2izyhBjvvgfgVOk8WuA+490NqYO0fd5FIrPb1i6ARB0kFPcWobhUQXjva2SLlZbPH+yLRZ4g492n0dthgiZgvPunjOHWzRir6RznK1JJJwvFZd/RlgmLZGZK5zHGjV0s8AAWeeKMd/8MbsUzka1yBgvb1LBVCADjHS/TUmFW6Q2kYrdh/1BamfHumVBYPS2cyqnGux2Fc0iGRV4DGO/eCOA+6TwaZrbx7u7cQUOrkN/ljtswnfxES0l9VijupUJxKZLQg05qdfT7wxW1zmKR1xDhsuS10nk0xLclLxUa77aXit0AszgPjyqYIxSXl2o7wHj3NuRfkLG+8e5nmWNmxyKvQYx3/wrgB9J5CLvAeHewdBJdnZ8xwB7Gu79KJ0HtYpXeSCq28e4PUrEprrAgI0tPzrCC9vEcsaSxyGsY490nIPepWNpPwxL7RhiyQm+HxL0IqbukVtVeKRSXEjHe/Sbx6+7vh+x1nUVeExnvTgewnXQemc0x3n1AOonxwgvC/dJ5JLax8e4m6SSotY4Wisut9joqvO7Gnqd+aFjoOFRY5DWU8e52ANMBLJHOJYPdQ2HbSMa7zdDR+ZLhssUj0nlQO1mlxVZhSyzMonzCPPVYvWTfZLw7M9JYrSJa5El2SG8D490LxruXAJgrnUsi96E3+fUq6UQGCfMlG92pvaShu2zRMU35gC7V0P0SobiUUVj5Wveq1lrGu1tj5NNGU6zSkvFnSAZvi7BJ8oYAXpTOJaJPAdimTZNfw8Tg6QCel86lpiOH8bJFx7wgnUCwj1Bc9rMcEsa72yt+IL0cwFTj3YLIKbXKFADTBOM/KRi7VYx3jxnvpqGh28GUcGO4RPgd452XTqascHZVAZgtnUsFV4fH/jTpRMbiGf1KlkonYJVeWyo2L9UOn1DoFd04YA6A9xrvxH9PpE2B7Nk0vriXZLz7Rfhh/5x0LiXdht6nqh2lE4nBePet8Dz8WDqXAp4GsK7xbjfpRCawinQCLdSEy7VHCcX9pVBcEhY2Dhh09niW8e509vvsGbFKzwCwSCI45wTVZ5V+D4CfApgqncsELgGwV9c/UVmlT4Lcm95EFgLYvOm978KUkWXSebTMKtJnwq3SUs/ZDlwNPtys0i8D8Oi4b8833r1MIp8mGwFEf1lXN949JxS7U6zSa6JXZHxROBWgd+boYOPdT6QTyc0qvSuAiyC7+fa30Xv8BVMozio9De2f55hVEz4gS71vNOH/Ts1glbYAZqHXHmUoV88OMlrkjV6ynQlgbQBP4e+T/F9Ab95ema9A70V7evje9PBn1CIAzxnvFqf4Tw278KY5G8CuAN6RIeTfAFwI4BLj3W8zxGsFq/RuAA4AsEfiULcAOAO9OXfPJI6VRNjgfiaA+eHraOugKq8/bf8K9F4/Ry/Jjp6ln4HepW3X1ueZiPLiJ6IhEIq+HQDsBGBnAFsAWL3icH8E8ACAXwG40nj35yhJdlz4ILVz+PNWANtWHOo+AHcBuB7AdU2/FEtERHL+PyZMyQfvmGbfAAAAAElFTkSuQmCC" alt="PSOE Palma">
+  <div class="tit">
+    <h1>Generador de mocions de districte</h1>
+    <p>Grup Municipal Socialista · Ajuntament de Palma · funciona sense connexió</p>
+  </div>
 </header>
 
 <div class="wrap">
@@ -108,6 +132,7 @@
 
     <div class="btns">
       <button id="gen">⬇ Generar moció (.docx + PDF)</button>
+      <button class="sec" id="genpdf" style="display:none">⬇ Baixar el PDF</button>
       <button id="mail">✉ Enviar per correu al grup</button>
       <button class="sec" id="copy">Copiar text</button>
     </div>
@@ -759,7 +784,13 @@ const CFG = {
     "nom": "Francesc Dalmau Fortuny",
     "carrec": "Portaveu del Grup Municipal PSIB-PSOE"
   },
-  "correu_grup": "gms@palma.cat"
+  "correu_grup": "gms@palma.cat",
+  "sessions": {
+    "excloses": [
+      "2027-01-04"
+    ],
+    "fi_mandat": "2027-05-31"
+  }
 };
 
 /* ===== Lògica (mirall de generar_mocion.py) ===== */
@@ -791,14 +822,27 @@ function juntaDelMes(y,m){
   while(j.getDay()!==1) j.setDate(j.getDate()+1);            // primer dilluns després
   return j;
 }
+/* Excepcions del calendari, definides al config.yaml (secció "sessions"):
+   - excloses : juntes calculades que no se celebren (data ISO)
+   - fi_mandat: cap junta a partir d'aquesta data, inclosa */
+const SES=(CFG.sessions||{});
+const EXCLOSES=(SES.excloses||[]);
+const FI_MANDAT=SES.fi_mandat||null;
+
 function proximesJuntes(n){
   const today=new Date(); today.setHours(0,0,0,0);
   const res=[]; let y=today.getFullYear(), m=today.getMonth()-1;
   while(res.length<n){
     const j=juntaDelMes(y,m); j.setHours(0,0,0,0);
+    const iso=isoLocal(j);
     // A l'agost no hi ha sessions: s'ometen les juntes que cauen dins l'agost
-    if(j>=today && j.getMonth()!==7) res.push(j);
+    const val = j>=today && j.getMonth()!==7
+             && EXCLOSES.indexOf(iso)<0
+             && !(FI_MANDAT && iso>=FI_MANDAT);
+    if(val) res.push(j);
     m++; if(m>11){ m=0; y++; }
+    // Amb fi de mandat, en arribar-hi ja no en sortiran més: aturem la cerca
+    if(FI_MANDAT && isoLocal(juntaDelMes(y,m))>=FI_MANDAT) break;
     if(y>today.getFullYear()+3) break;
   }
   return res;
@@ -866,6 +910,8 @@ function paragraphs(m, withImg, blancsFirma){
 }
 
 function updatePreview(){
+  /* si es canvia res, el PDF pendent d'iOS ja no val */
+  try{ pdfPendent=null; document.getElementById("genpdf").style.display="none"; }catch(e){}
   const m=build();
   const esc=(s)=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
   const html='<div class="box">'+esc(m.titol)+'</div>\n'
@@ -1056,10 +1102,31 @@ function generaDocs(){
   return { base:nomFitxer(m), docx:docx, pdf:pdf };
 }
 
+/* iOS (Safari) només accepta una descàrrega per gest de l'usuari: la segona,
+   llançada amb setTimeout, es perd en silenci. Allà baixem el .docx i mostrem
+   un botó perquè el PDF es baixi amb un altre toc (que sí que és un gest). */
+var ES_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+          || (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
+var pdfPendent=null;
+
 document.getElementById("gen").addEventListener("click", function(){
   const r=generaDocs(); if(!r) return;
   download(r.docx, r.base+".docx", MIME_DOCX);
-  setTimeout(function(){ download(r.pdf, r.base+".pdf","application/pdf"); },300);
+  const bpdf=document.getElementById("genpdf");
+  if(ES_IOS){
+    pdfPendent=r;
+    bpdf.style.display="block";
+    bpdf.textContent="⬇ Baixar el PDF";
+  } else {
+    setTimeout(function(){ download(r.pdf, r.base+".pdf","application/pdf"); },300);
+    bpdf.style.display="none";
+  }
+});
+
+document.getElementById("genpdf").addEventListener("click", function(){
+  if(!pdfPendent) return;
+  download(pdfPendent.pdf, pdfPendent.base+".pdf","application/pdf");
+  this.textContent="✓ PDF baixat";
 });
 
 /* Enviar per correu al grup: al mòbil obre el menú de compartir amb els dos

@@ -1099,7 +1099,7 @@ function generaDocs(){
   const ps=paragraphs(m, !!currentImage, fit.blancs);
   const docx=buildDocx({ paragraphs:ps, image:currentImage||undefined });
   const pdf=buildPdf(m, currentImage, fit.blancs);
-  return { base:nomFitxer(m), docx:docx, pdf:pdf };
+  return { base:nomFitxer(m), docx:docx, pdf:pdf, m:m };
 }
 
 /* iOS (Safari) només accepta una descàrrega per gest de l'usuari: la segona,
@@ -1140,6 +1140,18 @@ document.getElementById("mail").addEventListener("click", function(){
   const files=[ new File([r.docx], r.base+".docx", {type:MIME_DOCX}),
                 new File([r.pdf],  r.base+".pdf",  {type:"application/pdf"}) ];
   function copiaAdreca(){ try{ navigator.clipboard.writeText(CFG.correu_grup).catch(function(){}); }catch(e){} }
+
+  /* Cos del correu. Compte: això és un correu que s'envia de veritat al grup,
+     o sigui que ha de ser un missatge presentable, no una nota interna.
+     El destinatari NO va aquí: l'API de compartir no té camp "Per a" i, si el
+     posàvem al text, acabava dins el cos del correu (bug detectat 03-09-2026,
+     iPhone). L'adreça es copia al porta-retalls i s'enganxa a "Per a". */
+  function cosDelCorreu(){
+    const dist=CFG.districtes[r.m.dKey]||"";
+    const quan=r.m.dSessio ? (" del "+etiquetaJunta(new Date(r.m.dSessio+"T00:00:00")).replace(/^[^,]+,\s*/,"")) : "";
+    return "Bon dia,\n\nAdjunt la moció per a la Junta Municipal del Districte "
+         + dist + quan + ", en Word i en PDF.\n\nGràcies.";
+  }
   function restaura(ms){ setTimeout(function(){ b.textContent=MAIL_LABEL; }, ms||5000); }
   /* Pla B: descarrega els dos fitxers i obre un correu nou adreçat al grup */
   function fallback(){
@@ -1148,35 +1160,64 @@ document.getElementById("mail").addEventListener("click", function(){
     setTimeout(function(){
       window.location.href="mailto:"+CFG.correu_grup
         +"?subject="+encodeURIComponent(r.base)
-        +"&body="+encodeURIComponent("Adjunt la moció en .docx i PDF (a la carpeta de baixades; cal adjuntar-los al correu).");
+        +"&body="+encodeURIComponent(cosDelCorreu()
+            +"\n\n(Els dos fitxers són a la carpeta de baixades: cal adjuntar-los a mà.)");
     },700);
-    b.textContent="⬇ Descarregats — adjunta'ls al correu del grup";
+    b.textContent="⬇ Descarregats — adjunta'ls al correu del grup"
+                 +(b.dataset.motiu ? " ("+b.dataset.motiu+")" : "");
     copiaAdreca(); restaura(6000);
   }
   /* navigator.share s'ha de cridar DINS del gest de l'usuari, sense cap
      await pel mig: si no, el navegador el bloqueja en silenci.
-     Nota: Chrome només permet compartir fitxers des de pàgines https;
-     en un fitxer local dona NotAllowedError — ho recordem i anem
-     directament al pla B les vegades següents. */
-  var shareVetat=false;
-  try{ shareVetat = localStorage.getItem("mocions_share_vetat")==="1"; }catch(e){}
-  var potCompartir=false;
-  try{ potCompartir = !shareVetat && !!(navigator.share && navigator.canShare && navigator.canShare({files:files})); }catch(e){}
-  if(potCompartir){
-    navigator.share({ files:files, title:r.base,
-        text:"Moció per presentar. Destinatari: "+CFG.correu_grup })
+
+     Provem a compartir de manera insistent, perquè hi ha navegadors que
+     accepten uns tipus de fitxer i no uns altres (Safari, per exemple, és
+     primmirat amb el .docx). Ordre: els dos junts → només el PDF →
+     només el .docx. Només si cap combinació passa anem al pla B.
+
+     Des d'un fitxer local (file:) Chrome no deixa compartir fitxers mai:
+     allà anem directes al pla B. Abans això es recordava per sempre en un
+     "vet" desat al navegador; un sol error passatger deixava el botó
+     coix per sempre més, així que s'ha tret. */
+  const esFitxerLocal = location.protocol==="file:";
+  function potCompartir(f){
+    try{ return !!(navigator.share && navigator.canShare && navigator.canShare({files:f})); }
+    catch(e){ return false; }
+  }
+  const dos=files, nomesPdf=[files[1]], nomesDocx=[files[0]];
+  let tria=null, avis="";
+  if(!esFitxerLocal){
+    if(potCompartir(dos))            { tria=dos; }
+    else if(potCompartir(nomesPdf))  { tria=nomesPdf;  avis=" (el Word, a les baixades)"; }
+    else if(potCompartir(nomesDocx)) { tria=nomesDocx; avis=" (el PDF, a les baixades)"; }
+  }
+
+  if(tria){
+    // Si només compartim un dels dos, l'altre es baixa perquè no es perdi
+    if(tria!==dos){
+      const altre = tria===nomesPdf ? ["docx",r.docx,MIME_DOCX] : ["pdf",r.pdf,"application/pdf"];
+      download(altre[1], r.base+"."+altre[0], altre[2]);
+    }
+    navigator.share({ files:tria, title:r.base, text:cosDelCorreu() })
       .then(function(){
-        b.textContent="✉ Compartit — destinatari: "+CFG.correu_grup;
-        copiaAdreca(); restaura();
+        /* L'API de compartir no té camp "Per a": el destinatari s'ha de posar
+           al correu. L'adreça del grup està desada com a contacte als mòbils,
+           o sigui que amb teclejar les primeres lletres s'autocompleta; també
+           la deixem al porta-retalls per si de cas. */
+        b.textContent="✉ Compartit — falta el «Per a»: escriu "+CFG.correu_grup+avis;
+        copiaAdreca(); restaura(9000);
       })
       .catch(function(e){
         if(e && e.name==="AbortError"){ b.textContent=MAIL_LABEL; return; }  // cancel·lat per l'usuari
-        if(e && e.name==="NotAllowedError"){ try{ localStorage.setItem("mocions_share_vetat","1"); }catch(err){} }
-        b.textContent="Aquest navegador no permet compartir des d'un fitxer local — descarregant…";
+        b.textContent="No s'ha pogut compartir ("+((e&&e.name)||"error")+") — descarregant…";
         setTimeout(fallback, 600);
       });
     copiaAdreca();
   } else {
+    // Deixem dit per què, que si no sembla que el botó no faci res
+    b.dataset.motiu = esFitxerLocal ? "fitxer local"
+                    : (navigator.share ? "el navegador no accepta aquests fitxers"
+                                       : "el navegador no té compartir");
     fallback();
   }
 });
